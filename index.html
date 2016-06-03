@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+     <meta charset="utf-8">
+     <title>Angular Movie App from Scratch</title>
+
+     <style>
+     body {
+          font-family: Verdana;
+          box-sizing: border-box;
+     }
+     #poster {
+          position: absolute;
+          top: 10%;
+          left: 5%;
+          width: 25%;
+     }
+     #title {
+          position: absolute;
+          top: 5%;
+          left: 5%;
+     }
+     #plot {
+          position: absolute;
+          top: 10%;
+          left: 35%;
+          width: 30%;
+     }
+     #plotText {
+          font-size: 1.5em;
+          padding: 0;
+          margin-top: -0.5em;
+     }
+     #detailsPoster {
+          width: 100%;
+     }
+     .mainPageContainer {
+          width: 15%;
+          float: left;
+          padding: 1%;
+     }
+     .mainPagePoster {
+          width: 100%;
+          padding: 5%;
+     }
+     </style>
+
+     <script src='angular.js'></script>
+     <script src='angular-route.js'></script>
+
+     <script>
+     /* create the angular module */
+     var myMovieApp = angular.module('movieApp', ['ngRoute']);
+
+     /* create the controller which will be used to pull JSON data from themoviedb.org */
+     myMovieApp.controller('myMovieController', function($scope, $http){
+          $http.get('http://api.themoviedb.org/3/movie/now_playing?api_key=fec8b5ab27b292a68294261bb21b04a5')
+          .success(function(data){      /* data is the movie JSON data */
+               $scope.myMovieData = data.results;
+               debugger;
+          });
+     });
+
+     /* create the controller which will be used to pull JSON data for one movie from themoviedb.org */
+     /* we need $routeParams since we may be retrieving a URL parameter */
+     myMovieApp.controller('myMovieDetails', function($scope, $http, $routeParams){
+
+          $http.get('http://api.themoviedb.org/3/movie/' +
+          $routeParams.movieID +
+          '?api_key=fec8b5ab27b292a68294261bb21b04a5')
+
+          .success(function(data){
+
+               $scope.myMovieDetails = data;
+               console.log('myMovieDetails = ' + $scope.myMovieDetails);
+               console.log('myMovieDetails.title = ' + $scope.myMovieDetails.title);
+               console.log('myMovieDetails.overview = ' + $scope.myMovieDetails.overview);
+               $scope.title = $scope.myMovieDetails.title;
+               $scope.overview = $scope.myMovieDetails.overview;
+               $scope.poster_path = $scope.myMovieDetails.poster_path;
+               debugger;
+          });
+     });
+
+     myMovieApp.config(function($routeProvider) {
+          $routeProvider
+          .when('/', {
+               controller:    'myMovieController',
+               templateUrl:   'main.html'
+          })
+          .when('/:movieID', {
+               controller:    'myMovieDetails',
+               templateUrl:   'details.html'
+          });
+     });
+     </script>
+
+</head>
+
+<body ng-app='movieApp'>
+     <!-- we want to show the main and details pages at this location -->
+     <ng-view></ng-view>
+</body>
+</html>

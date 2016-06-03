@@ -1,0 +1,9 @@
+<h1>Now Showing</h1>
+
+<div class='mainPageContainer' ng-repeat = 'oneMovie in myMovieData'>
+     <a href='{{"#" + oneMovie.id}}'><img class='mainPagePoster' src="{{'http://image.tmdb.org/t/p/w500' + oneMovie.poster_path + '?api_key=fec8b5ab27b292a68294261bb21b04a5'}}"></a>
+     <p>{{oneMovie.id}}</p>
+     <p>{{'#/' + oneMovie.id}}</p>
+     <p>{{'#/' + oneMovie.id}}</p>
+
+</div>
